@@ -13,7 +13,11 @@ def getXMLSerializer(iterable, parser=etree.XMLParser, serializer=etree.tostring
     
     p = parser(encoding=encoding)
     for chunk in iterable:
-        p.feed(chunk)
+        if not isinstance(chunk, bytes):
+            p.feed(bytes(chunk,'utf-8'))
+            # print("O ooh! Mosaic str/bytes encoding ", type(chunk))
+        else:
+            p.feed(chunk)
     root = p.close()
     
     return XMLSerializer(root.getroottree(), serializer, pretty_print, doctype=doctype)
